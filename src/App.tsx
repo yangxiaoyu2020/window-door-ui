@@ -1,26 +1,27 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import NavigationBar from './components/NavigationBar';
+import OrderList from './components/OrderList';
+import Pipeline from './components/Pipeline';
+import './App.css'; // 导入自定义的 CSS 文件
+// import FactoryPage from './components/FactoryPage';
+// import LogisticsPage from './components/LogisticsPage';
+// import AfterSalesPage from './components/AfterSalesPage';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <NavigationBar />
+        <div className="content">
+          <Routes>
+            <Route path="/pipeline" element={<Pipeline />} />
+            <Route path="/orderlist" element={<OrderList />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;

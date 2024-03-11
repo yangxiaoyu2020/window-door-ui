@@ -1,0 +1,28 @@
+.pipeline-container {
+    position: relative;
+  }
+  
+  .node {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+  }
+  
+  .arrow {
+    margin: 0 10px;
+    font-size: 20px;
+  }
+  
+  .arrow-container {
+    position: absolute;
+  }
+  
+  .child-node {
+    margin-left: 20px;
+    margin-top: 10px;
+  }
+  

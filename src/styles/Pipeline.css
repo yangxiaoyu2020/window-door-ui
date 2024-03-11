@@ -1,0 +1,30 @@
+.node-shape {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* 添加过渡效果 */
+}
+
+.node-shape.collapsed {
+  background-color: #e0e0e0; /* 根据节点展开/折叠状态应用不同的背景颜色 */
+}
+
+.node-shape.expanded {
+  background-color: #f0f0f0; /* 定义展开状态下的背景颜色 */
+}
+
+.child-node-shape {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 5px;
+  margin-top: 5px; /* 添加一些顶部间距，以区分不同的子节点 */
+  transition: opacity 0.3s; /* 添加过渡效果 */
+  opacity: 1; /* 初始状态完全可见 */
+}
+
+.child-node-shape.hidden {
+  opacity: 0; /* 隐藏子节点 */
+}

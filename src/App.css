@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+/* App.css */
+
+.container {
+  display: flex;
+}
+
+
+
+
+.content {
+  margin-left: 220px; /* 留出导航栏的空间 */
+  padding: 20px;
+}
