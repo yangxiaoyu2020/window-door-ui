@@ -1,24 +1,25 @@
-import React, { useState, useEffect, Children } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Pipeline.css';
 import Node from './Node'
+import {NodeProps, StepType} from './Node'
 
-interface Node {
-  id: number;
-  text: string;
-  children: Node[];
-  position: { x: number; y: number };
-  expanded: boolean; // Track whether the node is expanded or collapsed
-  selectedStep: StepType | null; // 新增selectedStep属性
-  showStepTypeInput: boolean; // 新增属性用于控制显示步骤类型输入的标志
-  hasNextNode: boolean;
-}
+// interface Node {
+//   id: number;
+//   text: string;
+//   children: Node[];
+//   position: { x: number; y: number };
+//   expanded: boolean; // Track whether the node is expanded or collapsed
+//   selectedStep: StepType | null; // 新增selectedStep属性
+//   showStepTypeInput: boolean; // 新增属性用于控制显示步骤类型输入的标志
+//   hasNextNode: boolean;
+// }
 
-enum StepType {
-  Order = "订单",
-  Factory = "工厂",
-  Logistics = "物流",
-  AfterSales = "售后",
-}
+// enum StepType {
+//   Order = "订单",
+//   Factory = "工厂",
+//   Logistics = "物流",
+//   AfterSales = "售后",
+// }
 
 // 定义箭头类型
 interface Arrow {
@@ -33,7 +34,7 @@ const HORIZONTAL_GAP = 200;
 const VERTICAL_GAP = 100;
 
 const Pipeline: React.FC = () => {
-  const [nodes, setNodes] = useState<Node[]>([]);
+  const [nodes, setNodes] = useState<NodeProps[]>([]);
   const [selectedStep, setSelectedStep] = useState<StepType | null>(null);
   const [arrows, setArrows] = useState<Arrow[]>([]); // 箭头状态
   const [draggingNode, setDraggingNode] = useState<number | null>(null); // 正在拖动的节点ID
@@ -58,7 +59,7 @@ const Pipeline: React.FC = () => {
     addNode(null);
   };
 
-  const addNode = (parent: Node | null) => {
+  const addNode = (parent: NodeProps | null) => {
     if (selectedStep) {
       const newId = Date.now();
       let x = 0;
@@ -72,19 +73,18 @@ const Pipeline: React.FC = () => {
         x = 0;
         y = (newButtonPosition) ? newButtonPosition.bottom:VERTICAL_GAP;
       }
-      const newNode: Node = {
+      const newNode: NodeProps = {
         id: newId,
-        text: parent?(parent.selectedStep?parent.selectedStep.toString():selectedStep.toString()):selectedStep.toString(),
+        text: selectedStep.toString(),
         children: [],
         position: {
           x: x,
           y: y,
         },
-        expanded: true, // New nodes are initially expanded
-        selectedStep: parent?parent.selectedStep:selectedStep, // 新增属性用于控制显示步骤类型输入的标志
-        showStepTypeInput: true, // 设置新节点的selectedStep为当前选中的StepType
+        expanded: true,
+        selectedStep: selectedStep,
+        showStepTypeInput: true,
         hasNextNode: false,
-        
       };
       setNodes(prevNodes => [...prevNodes, newNode]);
       return newId;
@@ -107,13 +107,13 @@ const Pipeline: React.FC = () => {
     }
   };
 
-  const addNextNode = (parent: Node, selectType: StepType) => {
+  const addNextNode = (parent: NodeProps, selectType: StepType) => {
       const newId = Date.now();
       let x = 0;
       let y = 0;
       x = parent.position.x + HORIZONTAL_GAP;
       y = parent.position.y;
-      const newNode: Node = {
+      const newNode: NodeProps = {
         id: newId,
         text: selectType.toString(),
         children: [],
@@ -125,7 +125,6 @@ const Pipeline: React.FC = () => {
         selectedStep: selectType, // 新增属性用于控制显示步骤类型输入的标志
         showStepTypeInput: true, // 设置新节点的selectedStep为当前选中的StepType
         hasNextNode: false,
-        
       };
       parent.hasNextNode = true;
       console.log(selectType);
@@ -176,30 +175,34 @@ const Pipeline: React.FC = () => {
 
   
 
-  const addChildNode = (parentId: number) => {
-    const updatedNodes = nodes.map(node => {
-      if (node.id === parentId) {
-        const childId = addNode(node);
-        if (childId !== null) {
-          return {
-            ...node,
-            children: [...node.children, { 
+    const addChildNode = (parentId: number) => {
+      const updatedNodes: NodeProps[] = nodes.map(node => {
+        if (node.id === parentId) {
+          const childId = addNode(node);
+          if (childId !== null) {
+            const newChildNode: NodeProps = {
               id: childId,
-              text: node.text.toString() + node.children.length, 
-              children: [], 
-              position: { x: 0, y: node.position.y + VERTICAL_GAP  + node.children.length * VERTICAL_GAP},
-              expanded: true, // New child nodes are initially expanded
-              selectedStep: selectedStep, // 设置新子节点的selectedStep为当前选中的StepType
-              showStepTypeInput:false,
+              text: node.text.toString() + node.children.length,
+              children: [], // Ensure children is initialized as an empty array
+              position: { x: node.position.x, y: node.position.y + VERTICAL_GAP + node.children.length * VERTICAL_GAP },
+              expanded: true,
+              selectedStep: node.selectedStep,
+              showStepTypeInput: false,
               hasNextNode: true,
-            }]
-          };
+            };
+    
+            // Construct the updated node with the new child node appended to its children array
+            return {
+              ...node,
+              children: [...node.children, newChildNode],
+            };
+          }
         }
-      }
-      return node;
-    });
-    setNodes(updatedNodes);
-  };
+        return node;
+      });
+      setNodes(updatedNodes);
+    };
+    
 
   const deleteChildNode = (parentId: number, childId: number) => {
     const updatedNodes = nodes.map(node => {
@@ -240,6 +243,7 @@ const Pipeline: React.FC = () => {
             expanded={node.expanded}
             showStepTypeInput={node.showStepTypeInput}
             hasNextNode={node.hasNextNode}
+            children={[]}
             selectedStep={node.selectedStep || StepType.Order} // 处理 null 值
             onClick={() => toggleNodeExpansion(node.id)}
             addNextNode={(selectType) => addNextNode(node, selectType)}

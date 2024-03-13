@@ -21,15 +21,7 @@ const OrderList: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Order List</h2>
-      <ul>
-        {orders.map(order => (
-          <li key={order.id}>{order.name}</li>
-        ))}
-      </ul>
-      <p>API base URL: {config.API_BASE_URL}</p>
-    </div>
+    orders
   );
 };
 

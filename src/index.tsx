@@ -1,13 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom'
+
 import { createRoot } from "react-dom/client";
-import NavigationBar from './components/NavigationBar';
 import reportWebVitals from './reportWebVitals';
+import { StyledEngineProvider } from '@mui/joy/styles';
 import App from './App';
 
 const contain = document.getElementById("root")
 const root = createRoot(contain!);
-root.render(<App />);
-
+root.render(
+    <React.StrictMode>
+      <StyledEngineProvider injectFirst>
+        <App />
+      </StyledEngineProvider>
+    </React.StrictMode>
+  );
 reportWebVitals();

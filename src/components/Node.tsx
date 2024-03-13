@@ -1,30 +1,31 @@
 import React from 'react';
 
 
-enum StepType {
+export enum StepType {
     Order = "订单",
     Factory = "工厂",
     Logistics = "物流",
     AfterSales = "售后",
   }
 
-interface NodeProps {
+export interface NodeProps {
   id: number;
   text: string;
-  position?: { x: number; y: number };
+  position: { x: number; y: number };
   expanded: boolean;
   showStepTypeInput: boolean;
   hasNextNode: boolean;
   selectedStep: StepType; // 将 selectedStep 添加到 NodeProps
-  toggleNodeExpansion: () => void;
-  onClick: () => void;
-  addNextNode: (selectType: StepType) => void;
-  addChildNode: () => void;
-  deleteNode: () => void;
-  deleteChildNode: (childId: number) => void;
-  onDragStart: (e: React.DragEvent<HTMLDivElement>, id: number) => void; // 添加拖动开始事件处理程序
-  onDrag: (e: React.DragEvent<HTMLDivElement>) => void; // 添加拖动事件处理程序
-  onDragEnd: () => void; // 添加拖动结束事件处理程序
+  children: NodeProps[];
+  toggleNodeExpansion?: () => void;
+  onClick?: () => void;
+  addNextNode?: (selectType: StepType) => void;
+  addChildNode?: () => void;
+  deleteNode?: () => void;
+  deleteChildNode?: (childId: number) => void;
+  onDragStart?: (e: React.DragEvent<HTMLDivElement>, id: number) => void; // 添加拖动开始事件处理程序
+  onDrag?: (e: React.DragEvent<HTMLDivElement>) => void; // 添加拖动事件处理程序
+  onDragEnd?: () => void; // 添加拖动结束事件处理程序
 }
 
 const Node: React.FC<NodeProps> = ({ 
@@ -35,14 +36,14 @@ const Node: React.FC<NodeProps> = ({
     showStepTypeInput, 
     hasNextNode,
     selectedStep,
-    onClick, 
-    addNextNode, 
-    addChildNode, 
-    deleteNode, 
+    onClick = () => {},
+    addNextNode = () => {},
+    addChildNode = () => {}, 
+    deleteNode = () => {},
     deleteChildNode,
-    onDragStart,
-    onDrag,
-    onDragEnd,
+    onDragStart = () => {},
+    onDrag = () => {},
+    onDragEnd = () => {},
 }) => {
     return (
       <div style={{ position: 'absolute', left: position?.x, top: position?.y }}
