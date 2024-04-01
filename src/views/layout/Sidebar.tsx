@@ -31,8 +31,8 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 
 
 
-import ColorSchemeToggle from './ColorSchemeToggle';
-import { closeSidebar } from '../utils/Utils';
+import ColorSchemeToggle from '../../components/ColorSchemeToggle';
+import { closeSidebar } from '../../utils/Utils';
 
 
 function Toggler({
