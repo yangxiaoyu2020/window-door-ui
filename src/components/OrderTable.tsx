@@ -70,7 +70,7 @@ const rows = [
     {
       id: 'INV-1231',
       date: 'Feb 3, 2023',
-      status: 'Refunded',
+      status: 'Cancelled',
       customer: {
         initial: 'T',
         name: 'Test 1',
